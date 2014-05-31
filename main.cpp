@@ -36,6 +36,7 @@ int main(int argc, char **argv)
     // Remplissage de la matrice
     int ix, iy;
     for(std::vector<Point>::iterator it = nuage.begin(); it != nuage.end(); ++it) {
+        // TODO: la gestion des coordonnées est vraiment approximative, il suffit d'une coordonnée un peu en dehors et c'est fini...
         ix = it->x() + extrem_x;
         iy = it->y() + extrem_y;
         matrice[ ix ][ iy ].push_back(it->z());
