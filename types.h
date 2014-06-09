@@ -5,6 +5,10 @@
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 typedef CGAL::Exact_predicates_inexact_constructions_kernel Kernel;
 
+#include <CGAL/Polyhedron_3.h>
+typedef CGAL::Polyhedron_3<Kernel>         Polyhedron;
+
+
 // basic types from kernel
 typedef Kernel::FT FT;
 // typedef CGAL::Bbox_3 Bbox;

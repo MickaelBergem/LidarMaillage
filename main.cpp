@@ -53,5 +53,9 @@ int main(int argc, char **argv)
             }
         }
     }
+    
+    Polyhedron P;
+    
+    
     return 0;
 }
