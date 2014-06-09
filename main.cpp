@@ -51,7 +51,6 @@ int main(int argc, char **argv)
             else{
                 elevation[idx][idy] = std::accumulate(matrice[idx][idy].begin(),matrice[idx][idy].end(), 0.0) / matrice[idx][idy].size();
             }
-            cout << idx << ":" << idy << " " << elevation[idx][idy] << endl;
         }
     }
     return 0;
