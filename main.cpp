@@ -2,16 +2,21 @@
 #include <vector>
 #include <list>
 #include <iostream>
+#include <fstream>
 using namespace std;
 
 #include "types.h"
 #include "plysimpleloader.h"
+#include "tetrahedronbuilder.h"
+
+#include <CGAL/IO/Polyhedron_iostream.h>
 
 int main(int argc, char **argv)
 {
     cout << "LidarMaillage - Reconstruction d'un environnement 3D à partir de données LIDAR" << endl;
 
     string ply_file = "/home/mickael/Projets/MaillagesApplications/LidarMaillage/data.ply";
+    string export_file = "export.off";
 
     // Création d'une grille
     const int nb_pts_x = 200; // Nombre de points sur l'axe
@@ -54,8 +59,16 @@ int main(int argc, char **argv)
         }
     }
     
+    // Création du Polyhedron
     Polyhedron P;
+    TetrahedronBuilder<HalfedgeDS> map(&elevation[0][0], nb_pts_x, nb_pts_y);
     
+    P.delegate( map);
+    
+    // Export du maillage au format .off dans le fichier spécifié
+    ofstream fichier(export_file.c_str());
+    fichier << P;
+    fichier.close();
     
     return 0;
 }
