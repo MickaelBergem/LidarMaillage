@@ -7,7 +7,7 @@ using namespace std;
 
 #include "types.h"
 #include "plysimpleloader.h"
-#include "tetrahedronbuilder.h"
+#include "polyhedronbuilder.h"
 
 #include <CGAL/IO/Polyhedron_iostream.h>
 
@@ -61,7 +61,7 @@ int main(int argc, char **argv)
     
     // Création du Polyhedron
     Polyhedron P;
-    TetrahedronBuilder<HalfedgeDS> map(&elevation[0][0], nb_pts_x, nb_pts_y);
+    PolyhedronBuilder<HalfedgeDS> map(&elevation[0][0], nb_pts_x, nb_pts_y);
     
     P.delegate( map);
     

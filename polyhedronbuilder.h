@@ -27,13 +27,13 @@ typedef Polyhedron::HalfedgeDS             HalfedgeDS;
 
 // A modifier creating a triangle with the incremental builder.
 template <class HDS>
-class TetrahedronBuilder : public CGAL::Modifier_base<HDS> {
+class PolyhedronBuilder : public CGAL::Modifier_base<HDS> {
 private:
     float *elevation;
     int nb_pts_x;
     int nb_pts_y;
 public:
-    TetrahedronBuilder(float* elevation, int nb_pts_x, int nb_pts_y) {
+    PolyhedronBuilder(float* elevation, int nb_pts_x, int nb_pts_y) {
         this->elevation = elevation;
         this->nb_pts_x = nb_pts_x;
         this->nb_pts_y = nb_pts_y;
@@ -51,6 +51,7 @@ public:
         typedef typename Vertex::Point Point;
         
         // Insertion des points
+        std::cout << "Insertion des points dans le maillage" << std::endl;
         for(int idx = 0; idx < nb_pts_x; idx++) {
             for(int idy = 0; idy < nb_pts_y; idy++) {
                 B.add_vertex( Point( idx, idy, elevation[idx*this->nb_pts_y + idy]));
@@ -58,24 +59,25 @@ public:
         }
         
         // Insertion des facettes
+        std::cout << "Insertion des faces dans le maillage" << std::endl;
         int i_ref; // Index de référence pour dessiner les facettes
         for(int idx = 0; idx < nb_pts_x-1; idx++) {
             for(int idy = 0; idy < nb_pts_y-1; idy++) {
                 i_ref = idx + idy*nb_pts_x;
                 
-//                 // Triangle HG
-//                 B.begin_facet();
-//                 B.add_vertex_to_facet( i_ref);
-//                 B.add_vertex_to_facet( i_ref+1);
-//                 B.add_vertex_to_facet( i_ref+nb_pts_x);
-//                 B.end_facet();
-//                 
-//                 // Triangle BD
-//                 B.begin_facet();
-//                 B.add_vertex_to_facet( i_ref+1);
-//                 B.add_vertex_to_facet( i_ref+nb_pts_x);
-//                 B.add_vertex_to_facet( i_ref+nb_pts_x+1);
-//                 B.end_facet();
+                // Triangle HG
+                B.begin_facet();
+                B.add_vertex_to_facet( i_ref);
+                B.add_vertex_to_facet( i_ref+1);
+                B.add_vertex_to_facet( i_ref+nb_pts_x);
+                B.end_facet();
+                
+                // Triangle BD
+                B.begin_facet();
+                B.add_vertex_to_facet( i_ref+1);
+                B.add_vertex_to_facet( i_ref+nb_pts_x+1);
+                B.add_vertex_to_facet( i_ref+nb_pts_x);
+                B.end_facet();
             }
         }
         
