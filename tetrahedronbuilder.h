@@ -43,18 +43,42 @@ public:
         CGAL::Polyhedron_incremental_builder_3<HDS> B( hds, true);
         
         B.begin_surface( this->nb_pts_x * this->nb_pts_y // Nombre de vertices
-                        ,  (this->nb_pts_x-1) * (this->nb_pts_y-1) // Nombre de surfaces
+                        ,(this->nb_pts_x-1) * (this->nb_pts_y-1) // Nombre de surfaces
+                        ,(this->nb_pts_x-1) * (this->nb_pts_y-1) * 3 // Nombre de halfedges
                        );
         
         typedef typename HDS::Vertex   Vertex;
         typedef typename Vertex::Point Point;
         
-        
+        // Insertion des points
         for(int idx = 0; idx < nb_pts_x; idx++) {
             for(int idy = 0; idy < nb_pts_y; idy++) {
                 B.add_vertex( Point( idx, idy, elevation[idx*this->nb_pts_y + idy]));
             }
         }
+        
+        // Insertion des facettes
+        int i_ref; // Index de référence pour dessiner les facettes
+        for(int idx = 0; idx < nb_pts_x-1; idx++) {
+            for(int idy = 0; idy < nb_pts_y-1; idy++) {
+                i_ref = idx + idy*nb_pts_x;
+                
+//                 // Triangle HG
+//                 B.begin_facet();
+//                 B.add_vertex_to_facet( i_ref);
+//                 B.add_vertex_to_facet( i_ref+1);
+//                 B.add_vertex_to_facet( i_ref+nb_pts_x);
+//                 B.end_facet();
+//                 
+//                 // Triangle BD
+//                 B.begin_facet();
+//                 B.add_vertex_to_facet( i_ref+1);
+//                 B.add_vertex_to_facet( i_ref+nb_pts_x);
+//                 B.add_vertex_to_facet( i_ref+nb_pts_x+1);
+//                 B.end_facet();
+            }
+        }
+        
 //         B.begin_facet();
 //         B.add_vertex_to_facet( 0);
 //         B.add_vertex_to_facet( 1);
