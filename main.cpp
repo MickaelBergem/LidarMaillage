@@ -20,6 +20,12 @@ using namespace std;
 
 namespace SMS = CGAL::Surface_mesh_simplification ;
 
+// Retourne vrai si pt1 est plus bas que pt2
+bool altitudeLess (const Point pt1, const Point pt2)
+{
+    return pt1.z() < pt2.z();
+}
+
 int main(int argc, char **argv)
 {
     cout << "LidarMaillage - Reconstruction d'un environnement 3D à partir de données LIDAR" << endl;
@@ -35,7 +41,7 @@ int main(int argc, char **argv)
     const double extrem_y = 100; // Borne (+/-) de l'axe
 
     // Nombre maximal d'arrêtes
-    int N_max_edges = 1000;
+    int N_max_edges = 10000;
     
     // Chargement du nuage de points
     PLYSimpleLoader cloud(ply_file, nb_pts_x, nb_pts_y, extrem_x, extrem_y);
@@ -59,12 +65,29 @@ int main(int argc, char **argv)
         iy = it->y() + extrem_y;
         matrice[ ix ][ iy ].push_back(it->z());
     }
+    // Recherche du minimum
+    float elevation_mini = min_element(nuage.begin(), nuage.end(), altitudeLess)->z();
+    
+    
+    
+//     bool elevation_mini_init = false;
+//     for(int idx = 0; idx < nb_pts_x; idx++) {
+//         for(int idy = 0; idy < nb_pts_y; idy++) {
+//             cout << *min_element(matrice[idx][idy].begin() , matrice[idx][idy].end()) << endl;
+// //             if(!elevation_mini_init or elevation_mini > *min_element(matrice[idx][idy].begin() , matrice[idx][idy].end()) ){
+// //                 elevation_mini = *min_element(matrice[idx][idy].begin() , matrice[idx][idy].end());
+// //                 elevation_mini_init = true;
+// //             }
+//         }
+//     }
+    cout << "Altitude du plancher : " << elevation_mini << endl;
+    
     // Création de la matrice finale d'élévation
     for(int idx = 0; idx < nb_pts_x; idx++) {
         for(int idy = 0; idy < nb_pts_y; idy++) {
             if(matrice[idx][idy].size() == 0){
-                // TODO
-                elevation[idx][idy] = 0;
+                
+                elevation[idx][idy] = elevation_mini;
             }
             else{
                 elevation[idx][idy] = std::accumulate(matrice[idx][idy].begin(),matrice[idx][idy].end(), 0.0) / matrice[idx][idy].size();
