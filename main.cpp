@@ -29,8 +29,17 @@ bool altitudeLess (const Point pt1, const Point pt2)
 int main(int argc, char **argv)
 {
     cout << "LidarMaillage - Reconstruction d'un environnement 3D à partir de données LIDAR" << endl;
-
-    string ply_file = "/home/mickael/Projets/MaillagesApplications/LidarMaillage/data.ply";
+    
+    if(argc != 3){ // On attend deux arguments
+        cout << "Usage : " << argv[0] << " inputdata.ply max_number_edges" << endl;
+        exit(0);
+    }
+    
+    // Assignation des paramètres
+    string ply_file = argv[1]; // Fichier PLY depuis lequel lire l'objet
+    int N_max_edges = 10000; // Nombre maximal d'arrêtes
+    
+    // Variables statiques
     string pre_export_file = "pre-export.off";
     string final_export_file = "final-export.off";
 
@@ -40,8 +49,6 @@ int main(int argc, char **argv)
     const int nb_pts_y = 200; // Nombre de points sur l'axe
     const double extrem_y = 100; // Borne (+/-) de l'axe
 
-    // Nombre maximal d'arrêtes
-    int N_max_edges = 10000;
     
     // Chargement du nuage de points
     PLYSimpleLoader cloud(ply_file, nb_pts_x, nb_pts_y, extrem_x, extrem_y);
