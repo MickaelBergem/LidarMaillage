@@ -51,7 +51,7 @@ public:
         typedef typename Vertex::Point Point;
         
         // Insertion des points
-        std::cout << "Insertion des points dans le maillage" << std::endl;
+        std::cout << "\tInsertion des points dans le maillage" << std::endl;
         for(int idx = 0; idx < nb_pts_x; idx++) {
             for(int idy = 0; idy < nb_pts_y; idy++) {
                 B.add_vertex( Point( idx, idy, elevation[idx*this->nb_pts_y + idy]));
@@ -59,9 +59,11 @@ public:
         }
         
         // Insertion des facettes
-        std::cout << "Insertion des faces dans le maillage" << std::endl;
+        std::cout << "\tInsertion des faces dans le maillage" << std::endl;
+//         std::cout << "\t" << std::flush;
         int i_ref; // Index de référence pour dessiner les facettes
         for(int idx = 0; idx < nb_pts_x-1; idx++) {
+//             std::cout << "." << std::flush;
             for(int idy = 0; idy < nb_pts_y-1; idy++) {
                 i_ref = idx + idy*nb_pts_x;
                 
@@ -80,12 +82,7 @@ public:
                 B.end_facet();
             }
         }
-        
-//         B.begin_facet();
-//         B.add_vertex_to_facet( 0);
-//         B.add_vertex_to_facet( 1);
-//         B.add_vertex_to_facet( 2);
-//         B.end_facet();
+//         std::cout << std::endl;
         
         B.end_surface();
     };
