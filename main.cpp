@@ -72,28 +72,15 @@ int main(int argc, char **argv)
         iy = it->y() + extrem_y;
         matrice[ ix ][ iy ].push_back(it->z());
     }
+    
     // Recherche du minimum
     float elevation_mini = min_element(nuage.begin(), nuage.end(), altitudeLess)->z();
-    
-    
-    
-//     bool elevation_mini_init = false;
-//     for(int idx = 0; idx < nb_pts_x; idx++) {
-//         for(int idy = 0; idy < nb_pts_y; idy++) {
-//             cout << *min_element(matrice[idx][idy].begin() , matrice[idx][idy].end()) << endl;
-// //             if(!elevation_mini_init or elevation_mini > *min_element(matrice[idx][idy].begin() , matrice[idx][idy].end()) ){
-// //                 elevation_mini = *min_element(matrice[idx][idy].begin() , matrice[idx][idy].end());
-// //                 elevation_mini_init = true;
-// //             }
-//         }
-//     }
     cout << "Altitude du plancher : " << elevation_mini << endl;
     
     // Création de la matrice finale d'élévation
     for(int idx = 0; idx < nb_pts_x; idx++) {
         for(int idy = 0; idy < nb_pts_y; idy++) {
             if(matrice[idx][idy].size() == 0){
-                
                 elevation[idx][idy] = elevation_mini;
             }
             else{
@@ -105,7 +92,6 @@ int main(int argc, char **argv)
     // Création du Polyhedron
     Polyhedron P;
     PolyhedronBuilder<HalfedgeDS> map(&elevation[0][0], nb_pts_x, nb_pts_y);
-    
     P.delegate( map);
     
     // Export du maillage au format .off dans le fichier spécifié
@@ -114,15 +100,15 @@ int main(int argc, char **argv)
     fichier.close();
     
     // Simplification du maillage
-    cout << "Simplification du maillage, jusqu'à " << N_max_edges << " arrêtes." << endl;
+    cout << "Simplification du maillage, jusqu'à " << N_max_edges << " arrêtes (" << (P.size_of_halfedges()/2) << " initialement)." << endl;
     SMS::Count_stop_predicate<Polyhedron> stop(N_max_edges); // On s'arrête quand il y a moins de N arrêtes
     int r = SMS::edge_collapse( P
                       , stop
                       , CGAL::vertex_index_map(boost::get(CGAL::vertex_external_index,P)).edge_index_map(boost::get(CGAL::edge_external_index  ,P)) 
     );
     
-    std::cout << "Simplification terminée.\n" << r << " edges removed.\n" 
-                << (P.size_of_halfedges()/2) << " final edges.\n" ;
+    std::cout << "Simplification terminée.\n" << r << " arrêtes ont été supprimées.\n" 
+                << (P.size_of_halfedges()/2) << " arrêtes restantes.\n" ;
             
     // On exporte de nouveau pour le maillage simplifié
     ofstream fichier2(final_export_file.c_str());
