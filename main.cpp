@@ -11,12 +11,22 @@ using namespace std;
 
 #include <CGAL/IO/Polyhedron_iostream.h>
 
+// Adaptor for Polyhedron_3
+#include <CGAL/Surface_mesh_simplification/HalfedgeGraph_Polyhedron_3.h>
+// Simplification function
+#include <CGAL/Surface_mesh_simplification/edge_collapse.h>
+// Stop-condition policy
+#include <CGAL/Surface_mesh_simplification/Policies/Edge_collapse/Count_stop_predicate.h>
+
+namespace SMS = CGAL::Surface_mesh_simplification ;
+
 int main(int argc, char **argv)
 {
     cout << "LidarMaillage - Reconstruction d'un environnement 3D à partir de données LIDAR" << endl;
 
     string ply_file = "/home/mickael/Projets/MaillagesApplications/LidarMaillage/data.ply";
-    string export_file = "export.off";
+    string pre_export_file = "pre-export.off";
+    string final_export_file = "final-export.off";
 
     // Création d'une grille
     const int nb_pts_x = 200; // Nombre de points sur l'axe
@@ -24,6 +34,9 @@ int main(int argc, char **argv)
     const int nb_pts_y = 200; // Nombre de points sur l'axe
     const double extrem_y = 100; // Borne (+/-) de l'axe
 
+    // Nombre maximal d'arrêtes
+    int N_max_edges = 1000;
+    
     // Chargement du nuage de points
     PLYSimpleLoader cloud(ply_file, nb_pts_x, nb_pts_y, extrem_x, extrem_y);
 
@@ -66,9 +79,26 @@ int main(int argc, char **argv)
     P.delegate( map);
     
     // Export du maillage au format .off dans le fichier spécifié
-    ofstream fichier(export_file.c_str());
+    ofstream fichier(pre_export_file.c_str());
     fichier << P;
     fichier.close();
     
+    // Simplification du maillage
+    cout << "Simplification du maillage, jusqu'à " << N_max_edges << " arrêtes." << endl;
+    SMS::Count_stop_predicate<Polyhedron> stop(N_max_edges); // On s'arrête quand il y a moins de N arrêtes
+    int r = SMS::edge_collapse( P
+                      , stop
+                      , CGAL::vertex_index_map(boost::get(CGAL::vertex_external_index,P)).edge_index_map(boost::get(CGAL::edge_external_index  ,P)) 
+    );
+    
+    std::cout << "Simplification terminée.\n" << r << " edges removed.\n" 
+                << (P.size_of_halfedges()/2) << " final edges.\n" ;
+            
+    // On exporte de nouveau pour le maillage simplifié
+    ofstream fichier2(final_export_file.c_str());
+    fichier2 << P;
+    fichier2.close();
+    
+    std::cout << "Maillages exportés dans les fichiers " << pre_export_file << " et " << final_export_file << "." << std::endl;
     return 0;
 }
