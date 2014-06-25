@@ -50,8 +50,8 @@ PLYSimpleLoader::PLYSimpleLoader(string ply_filename, int _nb_pts_x, int _nb_pts
         cout << "\tPoints demandés : " << nb_pts_x << "*" << nb_pts_y << "=" << nb_pts_x*nb_pts_y << " / nombre de points du nuage : " << nb_vertices << endl;
     }
     
-    extrem_x = max_element(points.begin(), points.end(), xAbsLess)->x();
-    extrem_y = max_element(points.begin(), points.end(), yAbsLess)->y();
+    extrem_x = ceil(max_element(points.begin(), points.end(), xAbsLess)->x());
+    extrem_y = ceil(max_element(points.begin(), points.end(), yAbsLess)->y());
     
     pas_x = (extrem_x * 2.) / (_nb_pts_x-1);
     pas_y = (extrem_y * 2.) / (_nb_pts_y-1);
