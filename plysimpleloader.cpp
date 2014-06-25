@@ -25,23 +25,36 @@
 
 using namespace std;
 
-PLYSimpleLoader::PLYSimpleLoader(std::string ply_filename, int _nb_pts_x, int _nb_pts_y, double _extrem_x, double _extrem_y=100)
+bool xAbsLess (const Point pt1, const Point pt2){
+    return pt1.x() < pt2.x();
+}
+bool yAbsLess (const Point pt1, const Point pt2){
+    return pt1.y() < pt2.y();
+}
+
+PLYSimpleLoader::PLYSimpleLoader(string ply_filename, int _nb_pts_x, int _nb_pts_y)
 {
     // Initialisation des attributs
     nb_faces = 0;
     nb_vertices = 0;
-    points;
     
     // Récupération des paramètres de la grille
     nb_pts_x = _nb_pts_x;
     nb_pts_y = _nb_pts_y;
-    extrem_x = _extrem_x;
-    extrem_y = _extrem_y;
-    pas_x = (_extrem_x * 2 +1) / _nb_pts_x;
-    pas_y = (_extrem_y * 2 +1) / _nb_pts_y;
     
     // Chargement du fichier en mémoire
     loadfile(ply_filename);
+    
+    if(sqrt(nb_vertices) < nb_pts_x or sqrt(nb_vertices) < nb_pts_y){
+        cout << "[ATTENTION] La grille est trop fine pour le nombre de points actuel, il y a un fort risque de sur-échantillonnage !" << endl;
+        cout << "\tPoints demandés : " << nb_pts_x << "*" << nb_pts_y << "=" << nb_pts_x*nb_pts_y << " / nombre de points du nuage : " << nb_vertices << endl;
+    }
+    
+    extrem_x = max_element(points.begin(), points.end(), xAbsLess)->x();
+    extrem_y = max_element(points.begin(), points.end(), yAbsLess)->y();
+    
+    pas_x = (extrem_x * 2.) / (_nb_pts_x-1);
+    pas_y = (extrem_y * 2.) / (_nb_pts_y-1);
 }
 
 const vector< Point > PLYSimpleLoader::getcloud()
@@ -53,6 +66,7 @@ const vector< Point > PLYSimpleLoader::getcloud()
 void PLYSimpleLoader::aligncloud()
 {
     cout << "Grille X : [" << -extrem_x << ":" << extrem_x << "], pas " << pas_x << ", soit " << nb_pts_x << " points " << endl;
+    cout << "Grille Y : [" << -extrem_y << ":" << extrem_y << "], pas " << pas_y << ", soit " << nb_pts_y << " points " << endl;
     
     vector <Point> points_align;
     points_align.reserve(points.size()); // Allocation en mémoire du nombre de points prescrit
@@ -153,4 +167,18 @@ bool PLYSimpleLoader::parse_header(string ligne)
     
 //     cout << "HEAD non pris en compte : " << tok << endl;
     return true;
+}
+
+// Renvoie la forme du nuage
+ShapeCloud PLYSimpleLoader::getshape(){
+    ShapeCloud sc;
+    sc.nb_pts_x = nb_pts_x;
+    sc.nb_pts_y = nb_pts_y;
+    sc.extrem_x = extrem_x;
+    sc.extrem_y = extrem_y;
+    sc.pas_x = pas_x;
+    sc.pas_y = pas_y;
+    sc.nb_faces = nb_faces;
+    sc.nb_vertices = nb_vertices;
+    return sc;
 }
