@@ -60,23 +60,25 @@ int main(int argc, char **argv)
 {
     cout << "LidarMaillage - Reconstruction d'un environnement 3D à partir de données LIDAR" << endl;
     
-    if(argc != 3){ // On attend deux arguments
-        cout << "Usage : " << argv[0] << " inputdata.ply max_number_edges" << endl;
+    if(argc != 4){ // On attend deux arguments
+        cout << "Usage : " << argv[0] << " inputdata.ply size_grid max_number_edges" << endl;
         exit(0);
     }
     
     // Assignation des paramètres
     string ply_file = argv[1]; // Fichier PLY depuis lequel lire l'objet
-    int N_max_edges = atoi(argv[2]); // Nombre maximal d'arrêtes
+    
+    int taillegrille = atoi(argv[2]); // Taille de la grille
+    int N_max_edges = atoi(argv[3]); // Nombre maximal d'arrêtes
     
     // Variables statiques
     string pre_export_file = "pre-export.off";
     string final_export_file = "final-export.off";
 
     // Création d'une grille
-    const int nb_pts_x = 170; // Nombre de points sur l'axe
+    const int nb_pts_x = taillegrille; // Nombre de points sur l'axe
     double extrem_x; // Borne (+/-) de l'axe
-    const int nb_pts_y = 170; // Nombre de points sur l'axe
+    const int nb_pts_y = taillegrille; // Nombre de points sur l'axe
     double extrem_y; // Borne (+/-) de l'axe
     
     // Chargement du nuage de points
@@ -111,7 +113,6 @@ int main(int argc, char **argv)
         // TODO: la gestion des coordonnées est vraiment approximative, il suffit d'une coordonnée un peu en dehors et c'est fini...
         ix = it->x() + (nb_pts_x-1) / 2 ;
         iy = it->y() + (nb_pts_y-1) / 2 ;
-//         cout << "(" << it->x() << ":" << it->y() << ") -> [" << ix << ":" << iy << "]" << endl; 
         matrice[ ix ][ iy ].push_back(it->z());
     }
     
