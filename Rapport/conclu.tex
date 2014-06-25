@@ -1,0 +1,19 @@
+\newpage
+\section*{Conclusion et perspectives}
+% \addcontentsline{toc}{section}{Conclusion sur les choix techniques et organisationnels}
+
+Pour finir, j'ai donc réalisé un programme simple et rapide, qui transforme des nuages non structurés stockés dans des fichiers PLY en des maillages denses au format OFF, en permettant de jouer sur la qualité du maillage et sa densité.
+
+La taille de la grille est à définir manuellement, bien qu'une alerte s'affiche en cas de sur-échantillonnage, de même que le nombre d'arêtes limite.
+
+Le programme étant simple et sa taille étant limitée par le fait que j'étais seul sur ce projet, on pourrait imaginer un grand nombre d'améliorations :
+
+\begin{itemize}
+ \item ``nettoyage'' automatique des outliers, par exemple en supprimant les points isolés (ceux dont les k plus proches voisins n'appartiennent pas à une sphère de taille fixée), directement dans le nuage initial
+ \item lisser les surfaces après maillage, pour éviter les effets escalier sur des façades censées être lisses
+ \item ajouter une fonction de classification des objets : détection des plans, classification basée sur l'altitude, groupements, angle entre les plans... ou encore une classification sémantique basée sur une grammaire de construction
+ \item l'ajout de textures à partir de photos aériennes ou au sol
+ \item la superposition de plusieurs nuages pour permettre la reconstruction de villes entières
+\end{itemize}
+
+Ce projet a été pour moi l'occasion de découvrir les problématiques et les applications des méthodes de maillages de surfaces, et de prendre en main la librairie CGAL.

@@ -1,0 +1,57 @@
+\documentclass[12pt , a4paper]{article}% , twoside , openright
+
+% Modification des longueurs, pour corriger le Twoside
+%\setlength{\oddsidemargin}{52pt}
+%\setlength{\evensidemargin}{10pt}
+\usepackage{graphicx}
+\usepackage{float}
+
+
+\usepackage[francais]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{eurosym}
+\usepackage{yfonts}
+\usepackage[dvipsnames]{xcolor}
+	\definecolor{mygreen}{rgb}{0,0.6,0}
+	\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+	\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\usepackage{listings}
+\lstdefinestyle{python}{ %
+    language=Python,
+    backgroundcolor=\color{black!5}, % set backgroundcolor
+    basicstyle=\footnotesize,% basic font setting
+    commentstyle=\color{red},
+    keywordstyle=\color{orange},
+    stringstyle=\color{mygreen},
+    breaklines=true,
+    breakatwhitespace=true
+}
+\usepackage[francais]{layout}
+\usepackage{pifont}
+\usepackage{fancyhdr}
+\usepackage[hidelinks,urlcolor=blue,linkcolor=black,citecolor=red,linktoc=all,colorlinks=true,bookmarks=true]{hyperref}
+\usepackage{multirow}
+\usepackage{textcomp}
+\usepackage{xtab}
+\usepackage[]{algorithm2e}
+
+%\setlength{\variable}{dimension}	
+%\newcommand{\commande}[nops]{suite de commandes avec #nb}
+%\addcontentsline{toc}{chapter}{Introduction}
+%environnement lstlisting pour le code C++.
+
+\graphicspath{{Illustrations/}}
+\lstset{language=C++}
+
+\pagestyle{fancy} % headings va surcharger tous les entetes et pieds de page, plain met juste le numéro de paage en bas.
+
+\fancyhf{}
+\fancyhead[R]{\thepage}
+\fancyhead[L]{\leftmark}
+
+\renewcommand{\sectionmark}[1]{% #1 contient le titre de la section
+\markright{\thesection\ #1}}
